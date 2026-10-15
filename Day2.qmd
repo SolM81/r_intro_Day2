@@ -1,0 +1,64 @@
+---
+title: "Day2"
+format: html
+---
+
+
+```{r}
+library(tidyverse)
+```
+
+
+```{r}
+penguins |> glimpse()
+penguins |> count(species) |> arrange()
+penguins |> arrange(body_mass)
+penguins |> arrange(desc(flipper_len)) |> head()
+penguins |> arrange(desc(body_mass), flipper_len) |> relocate(island, .after =year)
+penguins |> relocate(body_mass)
+```
+
+```{r}
+penguins |> filter(species=="Adelie") |> count()
+penguins |> select(species, island) |> head()
+penguins |> filter(species=="Gentoo" & body_mass>5000) |> count()
+penguins |> select(sex) |> count()
+penguins |> filter (body_mass<3500 & bill_len<35)
+```
+
+```{r}
+penguins |> select(starts_with("bill"))
+penguins |> select(starts_with("b") | starts_with("f"))
+penguins |> distinct(year) |> head()
+penguins |> filter(body_mass>4000) |> distinct(species, island)
+penguins |> filter(body_mass>4000) |> distinct(sex)
+penguins |> filter(species=="Gentoo" & island=="Biscoe") |> distinct(year)
+penguins |> mutate(body_mass_kg=body_mass/1000)
+penguins |> mutate(flipper_to_mass=body_mass/flipper_len) |> arrange(desc(flipper_to_mass)) |> head()
+penguins |> mutate(body_mass_kg=body_mass/1000) |> mutate(heavy=body_mass_kg>4.5)
+penguins |> mutate(flipper_class=case_when(flipper_len&flipper_dep<190~ "short", flipper_len&flipper_dep<=210 ~ "medium", TRUE ~"long")) |> distinct(species, flipper_class)
+penguins |> mutate(flipper_class=case_when(flipper_len<190&body_mass<3500~ "small", flipper_len<210&body_mass>4500 ~ "medium", TRUE ~"long")) |> ggplot( 
+       mapping = aes(x = flipper_len,
+                     y = body_mass,
+                     colour = flipper_class)) +
+  geom_point()
+library (ggplot2)
+library(tidyverse)
+penguins |> mutate(flipper_class=case_when(flipper_len&flipper_dep<190~ "short", flipper_len&flipper_dep<=210 ~ "medium", TRUE ~"long")) |> ggplot( 
+       mapping = aes(x = flipper_len,
+                     y = flipper_dep,
+                     colour = flipper_class)) +
+  geom_point()
+penguins |> group_by(species, island) |> summarize (mean_body_mass=mean(body_mass, na.rm=TRUE))
+penguins |> glimpse()
+penguins |> 
+  group_by(species) |> 
+  filter(body_mass == max(body_mass, na.rm = TRUE))
+ggplot(
+  data = penguins,
+  mapping = aes(x = bill_len,
+                y = bill_dep,
+                shape = island, 
+                colour = species)) +
+  geom_point()
+```
